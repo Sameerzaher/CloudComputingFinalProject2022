@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+    <title>Group 2208 Url Shortener </title>
+
+    <link href="http://flask.pocoo.org/docs/0.12/_static/flask-favicon.ico" rel="icon">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/3.3/examples/justified-nav/justified-nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <style>
+        heading {
+            font-family: 'Raleway', sans-serif;
+            font-size: 46px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="jumbotron">
+            <heading>Url Shortener </heading>
+        </div>
+
+        <!-- <form action="index3.html" method="POST"> -->
+        <div class="input-group">
+            <input type="text" class="form-control input-lg" name="input" placeholder="your link to shorten"
+                id="longurl" autocomplete="off" autofocus>
+            <div class="input-group-btn">
+                <button id="button" class="btn btn-primary btn-lg" type="submit">
+                    <i class="fas fa-magic"></i>
+                </button>
+            </div>
+
+        </div>
+        <div>
+            <a id="long_result" target="_self">
+            </a>
+        </div>
+        <br><br><br><br>
+
+        <div class="input-group">
+            <input type="text" class="form-control input-lg" name="input" placeholder="your link to long_result"
+                id="shorturl" autocomplete="off" autofocus>
+            <div class="input-group-btn">
+                <button id="button1" class="btn btn-primary btn-lg" type="submit">
+                    <i class="fas fa-magic"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <div>
+            <a id="short_result" target="_self">
+            </a>
+        </div>
+
+
+        <!-- </form> -->
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+
+            $(document).ready(function () {
+                console.log("hello");
+                // $(location).prop('href', 'http://stackoverflow.com')
+                $('#button').click(function () {
+                    var API_URL = 'https://mjbg057l8f.execute-api.us-east-2.amazonaws.com/dev/';
+                    console.log("post function");
+                    fetch(API_URL, {
+                        // Adding method type
+                        method: "POST",
+
+                        // Adding body or contents to send
+                        body: JSON.stringify({
+                            type: "POST",
+                            url_long: $('#longurl').val()
+                        }),
+
+
+                        // Adding headers to the request
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        }
+                    })
+
+                        // Converting to JSON
+                        .then(response => response.json())
+
+                        // Displaying results to console
+                        .then(json => {
+                            console.log(json);
+                            $('#long_result').attr('href', 'https://' + json.url_short);
+                            $('#long_result').text(json.url_short);
+                        });
+                });
+                // + new URLSearchParams({url_short : "myapp.com/NmXWm5" })
+                $('#button1').click(function () {
+                    var API_URL_ = 'https://mjbg057l8f.execute-api.us-east-2.amazonaws.com/dev';
+                    console.log("get function");
+                    fetch(API_URL_, {
+                        // Adding method type
+                        method: "POST",
+                        // Adding body or contents to send
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        },
+                        body: JSON.stringify({
+                            type: 'GET',
+                            url_short: $('#shorturl').val()
+                        }),
+                    })
+
+                        // Converting to JSON
+                        .then(response => response.json())
+
+                        // Displaying results to console
+                        .then(json => {
+                            console.log(json);
+                            var longer_url = json.url_long;
+                            if (!/^https?:\/\//i.test(longer_url)) {
+                                longer_url = 'http://' + longer_url;
+                            }
+                            $('#short_result').attr('href', longer_url);
+                            $('#short_result').text(json.url_long);
+                        });
+
+
+                });
+            });
+
+        </script>
+
+
+    </div>
+</body>
+
+</html>
