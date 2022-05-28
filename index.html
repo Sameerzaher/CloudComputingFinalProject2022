@@ -70,7 +70,7 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script>
-
+            
             $(document).ready(function () {
                 console.log("hello");
                 // $(location).prop('href', 'http://stackoverflow.com')
@@ -100,7 +100,11 @@
                         // Displaying results to console
                         .then(json => {
                             console.log(json);
-                            $('#long_result').attr('href', 'https://' + json.url_short);
+                            var longer_url = json.url_long;
+                            if (!/^https?:\/\//i.test(longer_url)) {
+                                longer_url = 'http://' + longer_url;
+                            }
+                            $('#long_result').attr('href', longer_url);
                             $('#long_result').text(json.url_short);
                         });
                 });
